@@ -1,0 +1,19 @@
+html, body {
+	background-color: #2f4f30;
+	color: white;
+	margin: 0;
+}
+.card {
+	position: relative;
+	left: 150px;
+	margin-left: 100px;
+	width: 150px;
+}
+.title {
+	background-color: black;
+	color: white;
+	font-size: 25px;
+	padding: 20px;
+	text-align: center;
+	text-transform: uppercase;
+}
