@@ -9,32 +9,36 @@
 	<link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-	<header class="title">
+	<header class="row title">
 		Blackjack
 	</header>
 	<div class="row mt-2">
-		<div class="col text-center">
-			<button class="btn btn-danger">New Game</button>
-			<button class="btn btn-primary">Ask Card</button>
-			<button class="btn btn-primary">Stop / Finish</button>
+		<div class="col text-center m-3">
+			<button id="btnNewGame" class="btn btn-danger">New Game</button>
+			<button id="btnAskForCard" class="btn btn-primary">Ask for Card</button>
+			<button id="btnStop" class="btn btn-primary">Stop / Finish</button>
+			<h3 class="msg"></h3>
 		</div>
 	</div>
-	<div class="row container">
-		<div class="col">
-			<h1>Player - <small>0</small></h1>
-			<div id="player-cards">
-				<!-- <img class="mycard" src="assets/cartas/10C.png" /> -->
+	<div class="row">
+		<div class="container">
+			<div class="col">
+				<h1>Player - <small>0</small></h1>
+				<div id="player-cards">
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="row container mt-5">
-		<div class="col">
-			<h1>Computer - <small>0</small></h1>
-			<div id="computer-cards">
-				<!-- <img class="mycard" src="assets/cartas/3C.png" /> -->
+	<div class="row mt-5 mb-5">
+		<div class="container">
+			<div class="col">
+				<h1>Computer - <small>0</small></h1>
+				<div id="computer-cards">
+				</div>
 			</div>
 		</div>
 	</div>	
+	<script src="assets/js/underscore-esm-min.js"></script>
 	<script src="assets/js/game.js"></script>
 </body>
 </html>

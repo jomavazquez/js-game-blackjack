@@ -1,6 +1,7 @@
 html, body {
 	background-color: #2f4f30;
 	color: white;
+	overflow-x: hidden;
 	margin: 0;
 }
 .mycard {
@@ -14,9 +15,14 @@ html, body {
 	color: white;
 	font-size: 25px;
 	padding: 20px;
-	text-align: center;
+	justify-content: center;
 	text-transform: uppercase;
 }
+.msg {
+	color: yellow;
+	width: 100%;
+}
 #player-cards, #computer-cards {
-	height: 250px;
+	min-height: 250px;
+	overflow-x: auto;
 }
