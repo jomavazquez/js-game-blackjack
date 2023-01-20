@@ -1,136 +1,136 @@
-let deck = [];
-const types = ['C', 'D', 'H', 'S'];
-const specialTypes = ['A', 'J', 'Q', 'K'];
+const gameBJ = (() => {
+	'use strict'
 
-let scorePlayer = 0, scoreComputer = 0;
+	let deck = [];
+	const types = ['C', 'D', 'H', 'S'],
+		  specialTypes = ['A', 'J', 'Q', 'K'];
 
-// HTML References
-const btnNewGame = document.querySelector('#btnNewGame');
-const btnAskForCard = document.querySelector('#btnAskForCard');
-const btnStop = document.querySelector('#btnStop');
-const scoresHTML = document.querySelectorAll('small');
-const divCardsPlayer = document.querySelector('#player-cards');
-const divCardsComputer = document.querySelector('#computer-cards');
-const msg = document.querySelector('h3');
+	let scorePlayers = [];
 
-const createDeck = () => {
-	for( let i = 2; i <= 10; i++ ){
+	// HTML References
+	const btnNewGame = document.querySelector('#btnNewGame'),
+		  btnAskForCard = document.querySelector('#btnAskForCard'),
+		  btnStop = document.querySelector('#btnStop');
+
+	const divCardsPlayers = document.querySelectorAll('.cards'), 
+		  scoresHTML = document.querySelectorAll('small'),
+		  msg = document.querySelector('h3');
+
+  	const initGame = ( numPlayers = 2 ) => {
+		deck = createDeck();
+		scorePlayers = [];
+		for( let i = 0; i < numPlayers; i++ ){
+			scorePlayers.push(0);
+			scoresHTML[i].innerText = 0;
+			divCardsPlayers[i].innerHTML = '';
+		}
+
+		msg.innerHTML = '';
+
+		btnAskForCard.disabled = false;
+		btnStop.disabled = false;
+	}
+
+	const createDeck = () => {
+		deck = [];
+		for( let i = 2; i <= 10; i++ ){
+			for( let type of types ){
+				deck.push( i + type );
+			}
+		}
 		for( let type of types ){
-			deck.push( i + type );
+			for( let special of specialTypes ){
+				deck.push( special + type );
+			}
 		}
+		return _.shuffle( deck );
 	}
-	for( let type of types ){
-		for( let special of specialTypes ){
-			deck.push( special + type );
+
+	const askForCard = () => {
+		if( deck.length === 0 ){
+			throw 'There are no more cards in the deck';
 		}
+		return deck.pop();
 	}
-	deck = _.shuffle( deck );
-	return deck;
-}
 
-createDeck();
-
-const askForCard = () => {
-	if( deck.length === 0 ){
-		throw 'There are no more cards in the deck';
+	const valueCard = ( card ) => {
+		const value = card.substring(0, card.length - 1);
+		return ( isNaN(value) ) ?
+			( value === 'A' ) ? 11 : 10 
+			: value * 1;
 	}
-	
-	const card = deck.pop();
-	return card;
-}
 
-const valueCard = ( card ) => {
-	const value = card.substring(0, card.length - 1);
-	// let score = 0;
-	// if( isNaN(value) ){
-	// 	score = ( value === 'A' ) ? 11 : 10;
-	// }else{
-	// 	// Multiply a string with 1 converts this to number
-	// 	score = value * 1;
-	// }
-	// return score;
+	const acumulateScore = ( card, turn ) => {
+		// Turn 0: first player
+		// Last turn: Computer
+		scorePlayers[ turn ] += valueCard( card );
+		scoresHTML[ turn ].innerText = scorePlayers[ turn ];
+		return scorePlayers[ turn ];
+	}
 
-	return ( isNaN(value) ) ?
-		( value === 'A' ) ? 11 : 10 
-		: value * 1;
-}
-
-const computerTurn = ( minScorePlayer ) => {
-	do{
-		const card = askForCard();
-
-		scoreComputer += valueCard( card );
-		scoresHTML[1].innerText = scoreComputer;
-
+	const paintCard = ( card, turn ) => {
 		const imgCard = document.createElement('img');
 		imgCard.src = `assets/cartas/${ card }.png`;
 		imgCard.className = 'mycard';
 		imgCard.alt = card;
-		divCardsComputer.append( imgCard );
-
-		if( minScorePlayer > 21 ){
-			break;
-		}
-	}while( (scoreComputer < minScorePlayer) && (minScorePlayer <= 21) );
-
-	setTimeout( () => {
-		if( scoreComputer === minScorePlayer ){
-			msg.innerText = 'Draw!';
-		}else if( minScorePlayer > 21 ){
-			msg.innerText = 'Computer wins!';
-		}else if( scoreComputer > 21 ){
-			msg.innerText = 'You win!';
-		}else{
-			msg.innerText = 'Computer wins!';
-		}
-	}, 10);
-}
-
-// Events
-btnAskForCard.addEventListener('click', () => {
-	const card = askForCard();
-
-	scorePlayer += valueCard( card );
-	scoresHTML[0].innerText = scorePlayer;
-
-	const imgCard = document.createElement('img');
-	imgCard.src = `assets/cartas/${ card }.png`;
-	imgCard.className = 'mycard';
-	imgCard.alt = card;
-	divCardsPlayer.append( imgCard );
-
-	if( scorePlayer > 21 ){
-		btnAskForCard.disabled = true;
-		btnStop.disabled = true;
-		computerTurn( scorePlayer );
-	}else if( scorePlayer === 21 ){
-		btnAskForCard.disabled = true;
-		btnStop.disabled = true;
-		computerTurn( scorePlayer );
+		divCardsPlayers[ turn ].append( imgCard );
 	}
-});
 
-btnStop.addEventListener('click', () => {
-	btnAskForCard.disabled = true;
-	btnStop.disabled = true;
-	computerTurn( scorePlayer );
-});
+	const checkWinner = () => {
+		const [ minScore, scoreComputer ] = scorePlayers;
 
-btnNewGame.addEventListener('click', () =>{
+		setTimeout( () => {
+			if( scoreComputer === minScore ){
+				msg.innerText = 'Draw!';
+			}else if( minScore > 21 ){
+				msg.innerText = 'Computer wins!';
+			}else if( scoreComputer > 21 ){
+				msg.innerText = 'You win!';
+			}else{
+				msg.innerText = 'Computer wins!';
+			}
+		}, 10);
+	}
 
-	deck = [];
-	deck = createDeck();
+	const computerTurn = ( minScorePlayer ) => {
+		let scoreComputer = 0;
+		do{
+			const card = askForCard();
+			scoreComputer = acumulateScore( card, scorePlayers.length - 1 );
+			paintCard( card, scorePlayers.length - 1 );
+		}while( (scoreComputer < minScorePlayer) && (minScorePlayer <= 21) );
+		checkWinner();
+	}
 
-	scorePlayer = 0;
-	scoreComputer = 0;
-	scoresHTML[0].innerText = 0;
-	scoresHTML[1].innerText = 0;
+	// Events
+	btnAskForCard.addEventListener('click', () => {
+		const card = askForCard();
+		const scorePlayer = acumulateScore( card, 0 );
+		paintCard( card, 0 );
 
-	divCardsComputer.innerHTML = '';
-	divCardsPlayer.innerHTML = '';
-	msg.innerHTML = '';
+		if( scorePlayer > 21 ){
+			btnAskForCard.disabled = true;
+			btnStop.disabled = true;
+			computerTurn( scorePlayer );
+		}else if( scorePlayer === 21 ){
+			btnAskForCard.disabled = true;
+			btnStop.disabled = true;
+			computerTurn( scorePlayer );
+		}
+	});
 
-	btnAskForCard.disabled = false;
-	btnStop.disabled = false;
-	
-});
+	btnStop.addEventListener('click', () => {
+		btnAskForCard.disabled = true;
+		btnStop.disabled = true;
+		computerTurn( scorePlayers[0] );
+	});
+
+	btnNewGame.addEventListener('click', () =>{
+		initGame();
+	});
+
+	return {
+		newGame: initGame
+	};
+
+})();

@@ -15,8 +15,8 @@
 	<div class="row mt-2">
 		<div class="col text-center m-3">
 			<button id="btnNewGame" class="btn btn-danger">New Game</button>
-			<button id="btnAskForCard" class="btn btn-primary">Ask for Card</button>
-			<button id="btnStop" class="btn btn-primary">Stop / Finish</button>
+			<button id="btnAskForCard" disabled="disabled" class="btn btn-primary">Ask for Card</button>
+			<button id="btnStop" disabled="disabled" class="btn btn-primary">Stop / Finish</button>
 			<h3 class="msg"></h3>
 		</div>
 	</div>
@@ -24,8 +24,7 @@
 		<div class="container">
 			<div class="col">
 				<h1>Player - <small>0</small></h1>
-				<div id="player-cards">
-				</div>
+				<div class="cards"></div>
 			</div>
 		</div>
 	</div>
@@ -33,12 +32,14 @@
 		<div class="container">
 			<div class="col">
 				<h1>Computer - <small>0</small></h1>
-				<div id="computer-cards">
-				</div>
+				<div class="cards"></div>
 			</div>
 		</div>
 	</div>	
 	<script src="assets/js/underscore-esm-min.js"></script>
 	<script src="assets/js/game.js"></script>
+	<script>
+		gameBJ.newGame();
+	</script>
 </body>
 </html>
