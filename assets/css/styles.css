@@ -3,10 +3,10 @@ html, body {
 	color: white;
 	margin: 0;
 }
-.card {
+.mycard {
 	position: relative;
-	left: 150px;
-	margin-left: 100px;
+	left: 100px;
+	margin-left: -75px;
 	width: 150px;
 }
 .title {
@@ -16,4 +16,7 @@ html, body {
 	padding: 20px;
 	text-align: center;
 	text-transform: uppercase;
+}
+#player-cards, #computer-cards {
+	height: 250px;
 }
